@@ -300,7 +300,7 @@ export function MobileDatePickerModal({
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Round Trip
+                Vajtje Ardhje
               </button>
               <button
                 onClick={() => handleTripTypeChange('oneWay')}
@@ -310,7 +310,7 @@ export function MobileDatePickerModal({
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                One Way
+                Vajtje
               </button>
             </div>
           </div>
@@ -322,9 +322,9 @@ export function MobileDatePickerModal({
               className={`w-full flex items-center justify-between bg-gray-50 p-3 rounded-lg cursor-pointer ${!selectingReturn && 'ring-2 ring-blue-500'}`}
             >
               <div>
-                <div className="text-sm text-gray-500">Departure date</div>
+                <div className="text-sm text-gray-500">Data Nisjes</div>
                 <div className="font-medium flex items-center">
-                  {departureDate ? format(departureDate, 'dd MMM yyyy') : 'Select date'}
+                  {departureDate ? format(departureDate, 'dd MMM yyyy') : 'Zgjidh Daten'}
                   <Edit2 className="w-4 h-4 ml-2 text-blue-600" />
                 </div>
               </div>
@@ -346,9 +346,9 @@ export function MobileDatePickerModal({
                 className={`w-full flex items-center justify-between bg-gray-50 p-3 rounded-lg cursor-pointer ${selectingReturn && 'ring-2 ring-blue-500'}`}
               >
                 <div>
-                  <div className="text-sm text-gray-500">Return date</div>
+                  <div className="text-sm text-gray-500">Data Kthimit</div>
                   <div className="font-medium flex items-center">
-                    {returnDate ? format(returnDate, 'dd MMM yyyy') : 'Select date'}
+                    {returnDate ? format(returnDate, 'dd MMM yyyy') : 'Zgjidh Daten'}
                     <Edit2 className="w-4 h-4 ml-2 text-blue-600" />
                   </div>
                 </div>
@@ -406,11 +406,11 @@ export function MobileDatePickerModal({
           <div className="mt-4 flex items-center justify-center gap-6 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span>Direct Flight</span>
+              <span>Fluturim Direkt</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-orange-500" />
-              <span>With Stops</span>
+              <span>Me Ndalese</span>
             </div>
           </div>
 
@@ -427,12 +427,12 @@ export function MobileDatePickerModal({
             <div>
               <div className="text-sm text-gray-500">
                 {tripType === 'roundTrip' && returnDate 
-                  ? 'Total price' 
+                  ? 'Cmimi Total Mesatarisht' 
                   : selectingReturn 
-                    ? 'Return flight'
-                    : 'Departure flight'}
+                    ? 'Fluturimi Kthimit'
+                    : 'Fluturimi Nisjes'}
               </div>
-              <div className="text-sm text-gray-500">price/person</div>
+              <div className="text-sm text-gray-500">Cmimi/Person</div>
             </div>
             <div className="text-xl font-bold text-blue-600">
               {loadingPrices ? (
