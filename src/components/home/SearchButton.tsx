@@ -25,7 +25,7 @@ export function SearchButton({ loading, onClick }: SearchButtonProps) {
       ) : (
         <>
           <Search className="w-5 h-5 mr-2 inline-block" />
-          Search Flights
+          Kerko Fluturime
         </>
       )}
     </button>
