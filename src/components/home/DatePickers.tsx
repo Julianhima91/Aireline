@@ -47,7 +47,7 @@ export function DatePickers({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Departure Date
+            Data Nisjes
           </label>
           <div className="relative">
             <Calendar className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -56,7 +56,7 @@ export function DatePickers({
               onClick={handleDateClick}
               className="w-full pl-10 pr-3 py-2 text-left border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             >
-              {departureDate ? format(departureDate, 'dd MMM yyyy') : 'Select departure date'}
+              {departureDate ? format(departureDate, 'dd MMM yyyy') : 'Zgjidhni Daten e Nisjes'}
             </button>
           </div>
         </div>
@@ -64,7 +64,7 @@ export function DatePickers({
         {tripType === 'roundTrip' && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Return Date
+              Data Kthimit
             </label>
             <div className="relative">
               <Calendar className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -73,7 +73,7 @@ export function DatePickers({
                 onClick={handleDateClick}
                 className="w-full pl-10 pr-3 py-2 text-left border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
-                {returnDate ? format(returnDate, 'dd MMM yyyy') : 'Select return date'}
+                {returnDate ? format(returnDate, 'dd MMM yyyy') : 'Zgjidhni Daten e Kthimit'}
               </button>
             </div>
           </div>
