@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Safe area insets for mobile devices */
+@supports (padding: env(safe-area-inset-top)) {
+  .h-safe-top {
+    height: env(safe-area-inset-top);
+  }
+  .h-safe-bottom {
+    height: env(safe-area-inset-bottom);
+  }
+}
+
+/* Mobile date picker modal animations */
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes modal-slide-down {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+/* Cloud animations */
+@keyframes cloud-float-1 {
+  from { transform: translateX(0); opacity: 0; }
+  50% { opacity: 0.8; }
+  to { transform: translateX(100px); opacity: 0; }
+}
+
+@keyframes cloud-float-2 {
+  from { transform: translateX(0); opacity: 0; }
+  50% { opacity: 0.6; }
+  to { transform: translateX(-100px); opacity: 0; }
+}
+
+/* Message fade animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-cloud-1 {
+  animation: cloud-float-1 3s ease-in-out infinite;
+}
+
+.animate-cloud-2 {
+  animation: cloud-float-2 4s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.modal-backdrop {
+  animation: modal-fade-in 0.3s ease-out;
+}
+
+.modal-backdrop.closing {
+  animation: modal-fade-in 0.3s ease-out reverse;
+}
+
+.modal-content {
+  animation: modal-slide-up 0.3s ease-out;
+}
+
+.modal-content.closing {
+  animation: modal-slide-down 0.3s ease-out;
+}
+
+/* Custom styles for react-datepicker */
+.react-datepicker {
+  font-family: inherit !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  padding: 1rem !important;
+  background-color: white !important;
+}
+
+.react-datepicker__header {
+  background-color: white !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+}
+
+.react-datepicker__day-names {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.react-datepicker__day-name {
+  color: #6b7280 !important;
+  font-weight: 500;
+  width: 2.5rem !important;
+  margin: 0.2rem !important;
+}
+
+.react-datepicker__day {
+  width: 2.5rem !important;
+  height: 3rem !important;
+  line-height: 1.2 !important;
+  margin: 0.2rem !important;
+  border-radius: 0.375rem !important;
+  padding: 0.25rem 0 !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: #2563eb !important;
+}
+
+.react-datepicker__day--selected:hover {
+  background-color: #1d4ed8 !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #93c5fd !important;
+}
+
+.react-datepicker__day--disabled {
+  color: #d1d5db !important;
+}
+
+.react-datepicker__navigation {
+  top: 1rem !important;
+}
+
+.react-datepicker__month-container {
+  width: 100% !important;
+}
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}
+
+.custom-datepicker {
+  width: 320px !important;
+}

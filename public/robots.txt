@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Dynamic Routes
+Allow: /bileta-avioni-*
+Allow: /fluturime-*
+
+# Static Pages
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+
+# Sitemaps
+Sitemap: https://himatravel.com/sitemap.xml
