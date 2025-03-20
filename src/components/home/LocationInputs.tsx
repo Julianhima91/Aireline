@@ -27,16 +27,16 @@ export function LocationInputs({
             setToCity(null);
           }
         }}
-        placeholder="From where?"
+        placeholder="Nga Ku?"
         icon={MapPin}
-        label="From"
+        label="Nga"
       />
       <CityInput
         value={toCity?.name || ''}
         onChange={(city) => setToCity(city)}
-        placeholder="Where to?"
+        placeholder="Per Ku?"
         icon={Plane}
-        label="To"
+        label="Per"
         excludeCity={fromCity} // Pass the selected departure city for filtering
       />
     </div>
