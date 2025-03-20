@@ -16,7 +16,7 @@ export function TripTypeSelector({ tripType, onTripTypeChange }: TripTypeSelecto
         }`}
         onClick={() => onTripTypeChange('roundTrip')}
       >
-        Round Trip
+        Vajtje Ardhje
       </button>
       <button
         className={`px-3 py-2 text-sm font-medium rounded-r-lg ${
@@ -26,7 +26,7 @@ export function TripTypeSelector({ tripType, onTripTypeChange }: TripTypeSelecto
         }`}
         onClick={() => onTripTypeChange('oneWay')}
       >
-        One Way
+        Vajtje
       </button>
     </div>
   );
