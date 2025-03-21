@@ -46,9 +46,11 @@ export function GlobalFooter() {
               <li>
                 <Link to="/contact" className="text-gray-600 hover:text-blue-600 text-sm transition-colors">Na Kontaktoni</Link>
               </li>
-        
               <li>
                 <Link to="/careers" className="text-gray-600 hover:text-blue-600 text-sm transition-colors">Karriera</Link>
+              </li>
+              <li>
+                <Link to="/sitemap" className="text-gray-600 hover:text-blue-600 text-sm transition-colors">Sitemap</Link>
               </li>
             </ul>
           </div>
