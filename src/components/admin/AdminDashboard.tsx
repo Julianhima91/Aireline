@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Users, BookOpen, Search, LogOut, Key, Percent, DollarSign, TrendingUp, Sliders, Star, Book, Plane, Globe, Database } from 'lucide-react';
+import { Settings, Users, BookOpen, Search, LogOut, Key, Percent, DollarSign, TrendingUp, Sliders, Star, Book, Plane, Globe, Database, FileText } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { AdminClientSearches } from './AdminClientSearches';
@@ -12,6 +12,7 @@ import { FlightScoringSettings } from './scoring/FlightScoringSettings';
 import { AdminDocumentation } from './documentation/AdminDocumentation';
 import { AirportsManagement } from './airports/AirportsManagement';
 import { SeoPages } from './seo/SeoPages';
+import SitemapGeneratorPage from '../../pages/SitemapGeneratorPage';
 
 interface AdminStats {
   totalUsers: number;
@@ -26,7 +27,7 @@ interface AdminSettings {
 }
 
 export function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'settings' | 'searches' | 'agents' | 'commission' | 'tracking' | 'api' | 'system' | 'scoring' | 'docs' | 'airports' | 'seo'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'settings' | 'searches' | 'agents' | 'commission' | 'tracking' | 'api' | 'system' | 'scoring' | 'docs' | 'airports' | 'seo' | 'sitemap'>('overview');
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
     totalBookings: 0,
@@ -157,6 +158,18 @@ export function AdminDashboard() {
           </button>
 
           <button
+            onClick={() => setActiveTab('sitemap')}
+            className={`w-full flex items-center px-4 py-2 rounded-lg text-sm font-medium ${
+              activeTab === 'sitemap'
+                ? 'bg-blue-100 text-blue-700'
+                : 'text-gray-600 hover:bg-gray-50'
+            }`}
+          >
+            <FileText className="w-5 h-5 mr-3" />
+            Sitemap Generator
+          </button>
+
+          <button
             onClick={() => setActiveTab('system')}
             className={`w-full flex items-center px-4 py-2 rounded-lg text-sm font-medium ${
               activeTab === 'system'
@@ -244,6 +257,7 @@ export function AdminDashboard() {
           {activeTab === 'scoring' && <FlightScoringSettings />}
           {activeTab === 'docs' && <AdminDocumentation />}
           {activeTab === 'seo' && <SeoPages />}
+          {activeTab === 'sitemap' && <SitemapGeneratorPage />}
         </main>
       </div>
     </div>
