@@ -14,7 +14,10 @@ interface WhatsAppButtonProps {
 export function WhatsAppButton({ flight, searchParams, batchId, className = '' }: WhatsAppButtonProps) {
   const WHATSAPP_PHONE = '355695161381';
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.MouseEvent) => {
+    // Stop event propagation to prevent modal opening
+    e.stopPropagation();
+    
     try {
       const message = await formatFlightMessage(flight, searchParams, batchId);
       const whatsappUrl = `https://api.whatsapp.com/send/?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`;
