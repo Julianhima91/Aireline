@@ -15,13 +15,18 @@ export function WhatsAppButton({ flight, searchParams, batchId, className = '' }
   const WHATSAPP_PHONE = '355695161381';
 
   const handleClick = async (e: React.MouseEvent) => {
-    // Stop event propagation to prevent modal opening
+    e.preventDefault();
     e.stopPropagation();
     
     try {
       const message = await formatFlightMessage(flight, searchParams, batchId);
-      const whatsappUrl = `https://api.whatsapp.com/send/?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
+      // For mobile devices, use whatsapp:// protocol
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      const whatsappUrl = isMobile
+        ? `whatsapp://send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`
+        : `https://api.whatsapp.com/send/?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`;
+      
+      window.location.href = whatsappUrl;
     } catch (err) {
       console.error('Error generating WhatsApp message:', err);
     }
