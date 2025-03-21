@@ -3,26 +3,15 @@ import { Plane, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 
-interface Route {
-  id: string;
-  template_url: string;
-  from_location: {
-    type: string;
-    city: string | null;
-    state: string;
-    nga_format: string | null;
-  };
-  to_location: {
-    type: string;
-    city: string | null;
-    state: string;
-    per_format: string | null;
-  };
+interface DisplayRoute {
+  from_city: string;
+  to_city: string;
+  search_count: number;
 }
 
 export function PopularRoutes() {
   const navigate = useNavigate();
-  const [routes, setRoutes] = useState<Route[]>([]);
+  const [routes, setRoutes] = useState<DisplayRoute[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,35 +21,60 @@ export function PopularRoutes() {
 
   const fetchRoutes = async () => {
     try {
-      const { data, error } = await supabase
-        .from('seo_location_connections')
-        .select(`
-          id,
-          template_url,
-          from_location:from_location_id(
-            type, city, state, nga_format
-          ),
-          to_location:to_location_id(
-            type, city, state, per_format
-          )
-        `)
-        .eq('status', 'active')
-        .not('template_url', 'is', null)
-        .limit(6);
+      // 1. Merr të dhënat nga search_route_tracking (më të kërkuarat)
+      const { data: routeData, error: routeError } = await supabase
+        .from('search_route_tracking')
+        .select('origin, destination, search_count')
+        .order('search_count', { ascending: false });
 
-      if (error) throw error;
-      setRoutes(data || []);
+      if (routeError) throw routeError;
+      if (!routeData || routeData.length === 0) {
+        setRoutes([]);
+        return;
+      }
+
+      // 2. Merr aeroportet përkatëse nga tabela airports
+      const iataCodes = Array.from(new Set([
+        ...routeData.map(r => r.origin),
+        ...routeData.map(r => r.destination)
+      ]));
+
+      const { data: airports, error: airportError } = await supabase
+        .from('airports')
+        .select('iata_code, city')
+        .in('iata_code', iataCodes);
+
+      if (airportError) throw airportError;
+
+      const airportMap = new Map<string, string>();
+      airports?.forEach(a => {
+        airportMap.set(a.iata_code, a.city);
+      });
+
+      // 3. Eliminimi i duplikateve dhe mbajtja e rrugëve më të kërkuara
+      const uniqueRoutes = new Map<string, DisplayRoute>();
+
+      routeData.forEach(route => {
+        const fromCity = airportMap.get(route.origin) || route.origin;
+        const toCity = airportMap.get(route.destination) || route.destination;
+
+        const key = `${fromCity}-${toCity}`;
+
+        if (!uniqueRoutes.has(key) || uniqueRoutes.get(key)!.search_count < route.search_count) {
+          uniqueRoutes.set(key, {
+            from_city: fromCity,
+            to_city: toCity,
+            search_count: route.search_count
+          });
+        }
+      });
+
+      setRoutes(Array.from(uniqueRoutes.values()).slice(0, 6)); // Shfaq max 6 rrugë unike
     } catch (err) {
-      console.error('Error fetching routes:', err);
-      setError('Failed to load popular routes');
+      console.error('Error fetching popular routes:', err);
+      setError(err instanceof Error ? err.message : 'Error loading routes');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleRouteClick = (route: Route) => {
-    if (route.template_url) {
-      navigate(route.template_url);
     }
   };
 
@@ -92,45 +106,32 @@ export function PopularRoutes() {
     <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900">Destinacionet me te kerkuara</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Destinacionet më të kërkuara</h2>
           <p className="mt-2 text-base text-gray-600">
-            Zbuloni Destinacionet tona më të kërkuara.
+            Zbuloni destinacionet tona më të kërkuara.
           </p>
         </div>
 
         <div className="mt-8 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {routes.map((route) => {
-            const fromName = route.from_location.nga_format || 
-              (route.from_location.type === 'city' 
-                ? `nga ${route.from_location.city}` 
-                : `nga ${route.from_location.state}`);
-            
-            const toName = route.to_location.per_format || 
-              (route.to_location.type === 'city' 
-                ? `per ${route.to_location.city}` 
-                : `per ${route.to_location.state}`);
-            
-            return (
-              <button
-                key={route.id}
-                onClick={() => handleRouteClick(route)}
-                className="group bg-gray-50 hover:bg-blue-50 p-4 rounded-lg transition-colors duration-200 w-full text-left"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex-shrink-0">
-                    <Plane className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 font-medium text-gray-900">
-                      <span>{fromName}</span>
-                      <ArrowRight className="w-4 h-4 text-gray-400" />
-                      <span>{toName}</span>
-                    </div>
+          {routes.map((route, idx) => (
+            <div
+              key={idx}
+              className="group bg-gray-50 hover:bg-blue-50 p-4 rounded-lg transition-colors duration-200 w-full text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0">
+                  <Plane className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 font-medium text-gray-900">
+                    <span>{route.from_city}</span>
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                    <span>{route.to_city}</span>
                   </div>
                 </div>
-              </button>
-            );
-          })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
