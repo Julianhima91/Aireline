@@ -1,6 +1,10 @@
+esh-seo.js
+js
+Copy
 import { createClient } from '@supabase/supabase-js';
-import { renderSEOPage } from '../src/server/ssr.js';
+import { renderSEOPage } from '../src/server/ssr.js'; 
 
+// Create the Supabase client without TS non-null assertions
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
@@ -10,6 +14,7 @@ export default async function handler(req, res) {
   try {
     const path = req.url;
 
+    // Example queries (adjust table/column names to match your DB)
     const { data: seoData } = await supabase
       .from('seo_location_connections')
       .select(`
@@ -28,6 +33,7 @@ export default async function handler(req, res) {
       .eq('template_type_id', seoData?.template_type_id)
       .single();
 
+    // Call our plain-JS SSR function
     const { html, head } = renderSEOPage(path, seoData, template);
 
     const fullHtml = `<!DOCTYPE html>
