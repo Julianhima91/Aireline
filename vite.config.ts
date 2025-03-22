@@ -1,4 +1,3 @@
-// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -11,6 +10,7 @@ export default defineConfig({
     noExternal: ['react-router-dom', 'react-helmet-async']
   },
   build: {
+    ssr: 'ssr-entry.ts', // 👈 Add this line
     sourcemap: true,
     rollupOptions: {
       output: {
