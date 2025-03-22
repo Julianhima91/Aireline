@@ -1,7 +1,10 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    }
   ],
   "env": {
     "SUPABASE_URL": "@SUPABASE_URL",
