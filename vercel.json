@@ -1,13 +1,6 @@
 {
   "version": 2,
   "rewrites": [
-    {
-      "source": "/sitemap.xml",
-      "destination": "/api/fresh-sitemap"
-    }
-  ],
-  "env": {
-     "SUPABASE_URL": "@VITE_SUPABASE_URL",
-     "SUPABASE_ANON_KEY": "@VITE_SUPABASE_ANON_KEY"
-  }
+    { "source": "/sitemap.xml", "destination": "/api/fresh-sitemap" }
+  ]
 }
