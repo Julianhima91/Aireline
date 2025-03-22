@@ -1,4 +1,3 @@
-// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -6,14 +5,6 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
-  },
-  ssr: {
-    noExternal: ['react-router-dom', 'react-helmet-async']
-  },
-  build: {
-    sourcemap: true,
-    ssr: 'ssr-entry.ts'
-    // ❌ manualChunks removed to avoid SSR conflict
   },
   server: {
     proxy: {
