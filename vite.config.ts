@@ -1,19 +1,17 @@
+// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import ssr from 'vite-plugin-ssr/plugin';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    ssr()
-  ],
+  plugins: [react()],
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  ssr: {
+    noExternal: ['react-router-dom', 'react-helmet-async']
+  },
   build: {
-    // Generate source maps for better debugging
     sourcemap: true,
-    // Split chunks for better caching
     rollupOptions: {
       output: {
         manualChunks: {
