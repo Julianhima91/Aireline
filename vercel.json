@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
+      "destination": "/api/fresh-sitemap"
     }
   ],
   "env": {
