@@ -1,6 +1,4 @@
-esh-seo.js
-js
-Copy
+
 import { createClient } from '@supabase/supabase-js';
 import { renderSEOPage } from '../src/server/ssr.js'; 
 
