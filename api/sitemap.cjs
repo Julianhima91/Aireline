@@ -1,3 +1,4 @@
+// force deploy to Vercel
 const { createClient } = require('@supabase/supabase-js');
 
 const supabaseUrl = process.env.SUPABASE_URL;
