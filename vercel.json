@@ -1,7 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap-generator" }
+    { "source": "/sitemap.xml", "destination": "/api/fresh-sitemap" }
   ],
   "env": {
     "SUPABASE_URL": "@supabase_url",
