@@ -1,6 +1,13 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/fresh-sitemap" }
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/fresh-sitemap"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api/fresh-seo"
+    }
   ]
 }
