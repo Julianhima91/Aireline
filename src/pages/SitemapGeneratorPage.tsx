@@ -13,21 +13,52 @@ export default function SitemapGeneratorPage() {
   const [error, setError] = useState<string | null>(null);
   const [sitemap, setSitemap] = useState<string | null>(null);
   const [lastGenerated, setLastGenerated] = useState<Date | null>(null);
+  const [totalRoutes, setTotalRoutes] = useState(0);
 
   const generateSitemap = async () => {
     try {
       setGenerating(true);
       setError(null);
 
-      // Fetch all active route connections
-      const { data: routes, error: routesError } = await supabase
-        .from('seo_location_connections')
-        .select('template_url, updated_at')
-        .eq('status', 'active')
-        .not('template_url', 'is', null)
-        .order('template_url');
+      // Initialize array to store all routes
+      let allRoutes = [];
+      let page = 0;
+      const pageSize = 1000; // Supabase's max page size
+      let hasMore = true;
 
-      if (routesError) throw routesError;
+      // Fetch all routes using pagination
+      while (hasMore) {
+        const { data: routes, error, count } = await supabase
+          .from('seo_location_connections')
+          .select(`
+            template_url,
+            from_location:from_location_id(
+              type, city, state, nga_format
+            ),
+            to_location:to_location_id(
+              type, city, state, per_format
+            )
+          `, { count: 'exact' })
+          .eq('status', 'active')
+          .not('template_url', 'is', null)
+          .order('template_url')
+          .range(page * pageSize, (page + 1) * pageSize - 1);
+
+        if (error) throw error;
+
+        if (routes) {
+          allRoutes = allRoutes.concat(routes);
+        }
+
+        // Check if we need to fetch more
+        hasMore = routes && routes.length === pageSize;
+        page++;
+
+        console.log(`Fetched ${routes?.length || 0} routes (page ${page}). Total so far: ${allRoutes.length}`);
+      }
+
+      setTotalRoutes(allRoutes.length);
+      console.log(`Total routes fetched: ${allRoutes.length}`);
 
       // Generate XML
       const baseUrl = 'https://biletaavioni.himatravel.com';
@@ -38,12 +69,32 @@ export default function SitemapGeneratorPage() {
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
-  ${(routes || []).map((route: SitemapEntry) => `
+  <url>
+    <loc>${baseUrl}/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/contact</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/privacy</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/terms</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  ${allRoutes.map(route => `
   <url>
     <loc>${baseUrl}${route.template_url}</loc>
-    <lastmod>${new Date(route.updated_at).toISOString()}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
   </url>`).join('')}
 </urlset>`;
 
@@ -90,6 +141,7 @@ export default function SitemapGeneratorPage() {
         } else if (data) {
           setSitemap(data.description);
           setLastGenerated(new Date(data.updated_at));
+          setTotalRoutes((data.description.match(/<url>/g) || []).length - 5); // Subtract static pages
           setLoading(false);
         }
       } catch (err) {
@@ -156,9 +208,9 @@ export default function SitemapGeneratorPage() {
           </div>
         </div>
         {lastGenerated && (
-          <p className="text-sm text-gray-500 mt-2">
-            Last generated: {lastGenerated.toLocaleString()}
-          </p>
+          <div className="text-sm text-gray-500 mt-2">
+            Last generated: {lastGenerated.toLocaleString()} | Total routes: {totalRoutes}
+          </div>
         )}
       </div>
 
