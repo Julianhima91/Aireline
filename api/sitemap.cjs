@@ -3,7 +3,7 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
+// Trigger redeploy
 module.exports = async function handler(req, res) {
   try {
     const { data: routes, error } = await supabase
