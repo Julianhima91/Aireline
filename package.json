@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --config vite.ssr.config.ts --ssr ssr-entry.ts && npm run build:ssr",
-    "build:ssr": "tsc --project tsconfig.ssr.json",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",
@@ -17,7 +16,6 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",
     "@tailwindcss/typography": "^0.5.10",
-    "@vercel/edge": "^1.1.1",
     "@vercel/node": "^3.0.20",
     "axios": "^1.6.7",
     "date-fns": "^3.3.1",
@@ -32,8 +30,7 @@
     "react-router-dom": "^6.22.3",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
-    "uuid": "^9.0.1",
-    "vite-plugin-ssr": "^0.4.142"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^8.56.0",
