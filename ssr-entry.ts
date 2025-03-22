@@ -1,2 +1,2 @@
-// ssr-entry.ts
+// ssr-entry.tsc
 export default {};
