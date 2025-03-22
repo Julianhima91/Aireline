@@ -6,8 +6,6 @@ import { Navbar } from './components/Navbar';
 import { GlobalFooter } from './components/common/GlobalFooter';
 import HomePage from './pages/HomePage';
 import ResultsPage from './pages/ResultsPage';
-import SEOPage from './pages/SEOPage';
-import SEOPreview from './pages/SEOPreview';
 import ContactPage from './pages/ContactPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
@@ -21,8 +19,17 @@ import { AgentRegister } from './components/agent/AgentRegister';
 import SitemapPage from './pages/SitemapPage';
 import UserSitemapPage from './pages/UserSitemapPage';
 
-// Inner routing component
-function AppRoutes({ seoData, template }: any) {
+export default function App() {
+  return (
+    <HelmetProvider>
+      <div className="min-h-screen flex flex-col bg-gray-50">
+        <AppRoutes />
+      </div>
+    </HelmetProvider>
+  );
+}
+
+function AppRoutes() {
   const { user } = useAuth();
   const isAdmin = user?.email === 'admin@example.com';
 
@@ -63,16 +70,8 @@ function AppRoutes({ seoData, template }: any) {
           </>
         }
       />
-      <Route
-        path="/seo-preview"
-        element={
-          <>
-            <Navbar />
-            <SEOPreview />
-            <GlobalFooter />
-          </>
-        }
-      />
+
+      {/* Standard Client Routes */}
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
       <Route path="/terms" element={<TermsPage />} />
@@ -80,16 +79,6 @@ function AppRoutes({ seoData, template }: any) {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/careers" element={<CareersPage />} />
       <Route path="/sitemap" element={<UserSitemapPage />} />
-
-      {/* SEO Routes with SSR injection */}
-      <Route
-        path="/bileta-avioni/:params?"
-        element={<SEOPage seoData={seoData} template={template} />}
-      />
-      <Route
-        path="/fluturime/:params?"
-        element={<SEOPage seoData={seoData} template={template} />}
-      />
 
       {/* Sitemap Route */}
       <Route path="/sitemap.xml" element={<SitemapPage />} />
