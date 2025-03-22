@@ -21,83 +21,95 @@ import { AgentRegister } from './components/agent/AgentRegister';
 import SitemapPage from './pages/SitemapPage';
 import UserSitemapPage from './pages/UserSitemapPage';
 
-function App() {
-  const { user } = useAuth();
-  const isAdmin = user?.email === 'admin@example.com';
-
+// This is the default export used for SSR
+export default function App({ seoData, template }: any) {
   return (
     <HelmetProvider>
       <div className="min-h-screen flex flex-col bg-gray-50">
-        <Routes>
-          {/* Admin Routes */}
-          <Route
-            path="/admin/login"
-            element={!isAdmin ? <AdminLogin /> : <Navigate to="/admin" replace />}
-          />
-          <Route
-            path="/admin/*"
-            element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" replace />}
-          />
-
-          {/* Agent Routes */}
-          <Route path="/agent/login" element={<AgentLogin />} />
-          <Route path="/agent/register" element={<AgentRegister />} />
-
-          {/* Public Routes */}
-          <Route
-            path="/home"
-            element={
-              <>
-                <Navbar />
-                <HomePage />
-                <GlobalFooter />
-              </>
-            }
-          />
-          <Route
-            path="/results"
-            element={
-              <>
-                <Navbar />
-                <ResultsPage />
-                <GlobalFooter />
-              </>
-            }
-          />
-          <Route
-            path="/seo-preview"
-            element={
-              <>
-                <Navbar />
-                <SEOPreview />
-                <GlobalFooter />
-              </>
-            }
-          />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/cookies" element={<CookiesPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/careers" element={<CareersPage />} />
-          <Route path="/sitemap" element={<UserSitemapPage />} />
-
-          {/* SEO Routes */}
-          <Route path="bileta-avioni/:params?" element={<SEOPage />} />
-          <Route path="/fluturime/:params?" element={<SEOPage />} />
-
-          {/* Sitemap Route */}
-          <Route path="/sitemap.xml" element={<SitemapPage />} />
-
-          {/* Root route */}
-          <Route path="/" element={<Navigate to="/home" replace />} />
-
-          {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
+        <AppRoutes seoData={seoData} template={template} />
       </div>
     </HelmetProvider>
   );
 }
 
-export default App;
+// Inner routing component
+function AppRoutes({ seoData, template }: any) {
+  const { user } = useAuth();
+  const isAdmin = user?.email === 'admin@example.com';
+
+  return (
+    <Routes>
+      {/* Admin Routes */}
+      <Route
+        path="/admin/login"
+        element={!isAdmin ? <AdminLogin /> : <Navigate to="/admin" replace />}
+      />
+      <Route
+        path="/admin/*"
+        element={isAdmin ? <AdminDashboard /> : <Navigate to="/admin/login" replace />}
+      />
+
+      {/* Agent Routes */}
+      <Route path="/agent/login" element={<AgentLogin />} />
+      <Route path="/agent/register" element={<AgentRegister />} />
+
+      {/* Public Routes */}
+      <Route
+        path="/home"
+        element={
+          <>
+            <Navbar />
+            <HomePage />
+            <GlobalFooter />
+          </>
+        }
+      />
+      <Route
+        path="/results"
+        element={
+          <>
+            <Navbar />
+            <ResultsPage />
+            <GlobalFooter />
+          </>
+        }
+      />
+      <Route
+        path="/seo-preview"
+        element={
+          <>
+            <Navbar />
+            <SEOPreview />
+            <GlobalFooter />
+          </>
+        }
+      />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/cookies" element={<CookiesPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/careers" element={<CareersPage />} />
+      <Route path="/sitemap" element={<UserSitemapPage />} />
+
+      {/* SEO Routes with SSR injection */}
+      <Route
+        path="/bileta-avioni/:params?"
+        element={<SEOPage seoData={seoData} template={template} />}
+      />
+      <Route
+        path="/fluturime/:params?"
+        element={<SEOPage seoData={seoData} template={template} />}
+      />
+
+      {/* Sitemap Route */}
+      <Route path="/sitemap.xml" element={<SitemapPage />} />
+
+      {/* Root Redirect */}
+      <Route path="/" element={<Navigate to="/home" replace />} />
+
+      {/* Catch All */}
+      <Route path="*" element={<Navigate to="/home" replace />} />
+    </Routes>
+  );
+}
