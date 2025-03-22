@@ -1,16 +1,13 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/fresh-seo.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/sitemap.xml",
-      "dest": "/api/fresh-sitemap"
+      "source": "/sitemap.xml",
+      "destination": "/api/fresh-sitemap"
     },
-
+    {
+      "source": "/(.*)",
+      "destination": "/api/fresh-seo"
+    }
   ]
 }
