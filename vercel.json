@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "/api/fresh-sitemap" // rename to fresh-sitemap.mjs if needed
+      "destination": "/api/fresh-sitemap"
     },
     {
       "source": "/(.*)",
