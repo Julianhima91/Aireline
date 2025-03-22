@@ -1,10 +1,6 @@
 // api/fresh-seo.ts
 import { createClient } from '@supabase/supabase-js';
-import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
-import { HelmetProvider } from 'react-helmet-async';
-import React from 'react';
-import App from '../src/App';
+import { renderSEOPage } from '../src/server/ssr'; // ✅ Import the new helper
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -32,33 +28,23 @@ export default async function handler(req: any, res: any) {
       return clientSideRender(req, res);
     }
 
+    // Fetch template data
     const { data: template } = await supabase
       .from('seo_page_templates')
       .select('*')
       .eq('template_type_id', seoData.template_type_id)
       .single();
 
-    const helmetContext = {};
-    const html = renderToString(
-      <HelmetProvider context={helmetContext}>
-        <StaticRouter location={path}>
-          <App seoData={seoData} template={template} />
-        </StaticRouter>
-      </HelmetProvider>
-    );
-
-    const { helmet } = helmetContext as any;
+    // ✅ Use precompiled JSX rendering logic
+    const { html, head } = renderSEOPage(path, seoData, template);
 
     const fullHtml = `<!DOCTYPE html>
-<html ${helmet.htmlAttributes.toString()}>
+<html>
   <head>
-    ${helmet.title.toString()}
-    ${helmet.meta.toString()}
-    ${helmet.link.toString()}
-    ${helmet.script.toString()}
+    ${head}
     <link rel="stylesheet" href="/assets/index.css">
   </head>
-  <body ${helmet.bodyAttributes.toString()}>
+  <body>
     <div id="root">${html}</div>
     <script type="module" src="/assets/index.js"></script>
     <script>
