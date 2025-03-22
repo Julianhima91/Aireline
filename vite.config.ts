@@ -1,10 +1,27 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import ssr from 'vite-plugin-ssr/plugin';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    ssr()
+  ],
   optimizeDeps: {
     exclude: ['lucide-react'],
+  },
+  build: {
+    // Generate source maps for better debugging
+    sourcemap: true,
+    // Split chunks for better caching
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'supabase': ['@supabase/supabase-js']
+        }
+      }
+    }
   },
   server: {
     proxy: {
