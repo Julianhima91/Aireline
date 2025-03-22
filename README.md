@@ -2,7 +2,7 @@
 
 A modern flight search and booking platform with real-time pricing, filtering, and agent tools.
 
-## Core Features
+## Core Features <!-- redeploy trigger -->
 
 ### Search & Results
 - Real-time flight search with progressive loading
