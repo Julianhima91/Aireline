@@ -1,29 +1,22 @@
-// src/server/ssr.tsx
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom/server';
-import { HelmetProvider } from 'react-helmet-async';
-import App from '../App';
 
-export function renderSEOPage(path: string, seoData: any, template: any) {
-  const helmetContext = {};
-  const html = renderToString(
-    <HelmetProvider context={helmetContext}>
-      <StaticRouter location={path}>
-        <App seoData={seoData} template={template} />
-      </StaticRouter>
-    </HelmetProvider>
+/**
+ * Minimal SSR function that returns some basic HTML.
+ * This uses only standard JavaScript (no TypeScript or JSX).
+ */
+export function renderSEOPage(path, seoData, template) {
+  // Instead of writing JSX, use createElement directly
+  const element = React.createElement(
+    'div',
+    null,
+    `SSR content for path: ${path}`
   );
 
-  const { helmet } = helmetContext as any;
+  const html = renderToString(element);
 
-  return {
-    html,
-    head: `
-      ${helmet.title.toString()}
-      ${helmet.meta.toString()}
-      ${helmet.link.toString()}
-      ${helmet.script.toString()}
-    `
-  };
+  // For demonstration, we’ll just return a simple <title> tag
+  const head = `<title>My SSR Page</title>`;
+
+  return { html, head };
 }
