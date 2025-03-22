@@ -11,9 +11,6 @@
       "src": "/sitemap.xml",
       "dest": "/api/fresh-sitemap"
     },
-    {
-      "src": "/(.*)",
-      "dest": "/api/fresh-seo.js"
-    }
+
   ]
 }
