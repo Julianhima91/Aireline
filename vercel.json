@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "/api/fresh-sitemap"
+      "destination": "/api/fresh-sitemap" // rename to fresh-sitemap.mjs if needed
     },
     {
       "source": "/(.*)",
-      "destination": "/api/fresh-seo"
+      "destination": "/api/fresh-seo.mjs"
     }
   ]
 }
