@@ -1,11 +1,10 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/fresh-sitemap" }
+    { "source": "/sitemap.xml", "destination": "/api/sitemap" }
   ],
   "env": {
     "SUPABASE_URL": "@supabase_url",
-    "SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key"
+    "SUPABASE_ANON_KEY": "@supabase_anon_key"
   }
 }
