@@ -21,17 +21,6 @@ import { AgentRegister } from './components/agent/AgentRegister';
 import SitemapPage from './pages/SitemapPage';
 import UserSitemapPage from './pages/UserSitemapPage';
 
-// This is the default export used for SSR
-export default function App({ seoData, template }: any) {
-  return (
-    <HelmetProvider>
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <AppRoutes seoData={seoData} template={template} />
-      </div>
-    </HelmetProvider>
-  );
-}
-
 // Inner routing component
 function AppRoutes({ seoData, template }: any) {
   const { user } = useAuth();
