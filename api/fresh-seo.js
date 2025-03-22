@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { renderSEOPage } from '../src/server/ssr';
+import { renderSEOPage } from '../src/server/ssr.js';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
