@@ -1,6 +1,6 @@
 // api/fresh-seo.ts
 import { createClient } from '@supabase/supabase-js';
-import { renderSEOPage } from '../src/server/ssr'; // ✅ Import the new helper
+import { renderSEOPage } from '../src/server/ssr';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -11,8 +11,7 @@ export default async function handler(req: any, res: any) {
   try {
     const path = req.url;
 
-    // Fetch SEO data
-    const { data: seoData, error: seoError } = await supabase
+    const { data: seoData } = await supabase
       .from('seo_location_connections')
       .select(`
         template_url,
@@ -24,18 +23,12 @@ export default async function handler(req: any, res: any) {
       .eq('status', 'active')
       .single();
 
-    if (seoError || !seoData) {
-      return clientSideRender(req, res);
-    }
-
-    // Fetch template data
     const { data: template } = await supabase
       .from('seo_page_templates')
       .select('*')
-      .eq('template_type_id', seoData.template_type_id)
+      .eq('template_type_id', seoData?.template_type_id)
       .single();
 
-    // ✅ Use precompiled JSX rendering logic
     const { html, head } = renderSEOPage(path, seoData, template);
 
     const fullHtml = `<!DOCTYPE html>
