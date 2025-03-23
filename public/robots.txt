@@ -12,4 +12,4 @@ Allow: /privacy
 Allow: /terms
 
 # Sitemaps
-Sitemap: https://himatravel.com/sitemap.xml
+Sitemap: https://biletaavioni.himatravel.com/sitemap.xml
