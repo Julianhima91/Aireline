@@ -2,8 +2,7 @@ User-agent: *
 Allow: /
 
 # Dynamic Routes
-Allow: /bileta-avioni-*
-Allow: /fluturime-*
+Allow: /bileta-avioni/*
 
 # Static Pages
 Allow: /about
