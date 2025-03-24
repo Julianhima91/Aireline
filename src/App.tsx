@@ -18,6 +18,8 @@ import { AdminLogin } from './components/admin/AdminLogin';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { AgentLogin } from './components/agent/AgentLogin';
 import { AgentRegister } from './components/agent/AgentRegister';
+import SitemapPage from './pages/SitemapPage';
+import UserSitemapPage from './pages/UserSitemapPage';
 
 function App() {
   const { user } = useAuth();
@@ -78,10 +80,14 @@ function App() {
           <Route path="/cookies" element={<CookiesPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/careers" element={<CareersPage />} />
+          <Route path="/sitemap" element={<UserSitemapPage />} />
 
           {/* SEO Routes */}
           <Route path="bileta-avioni/:params?" element={<SEOPage />} />
           <Route path="/fluturime/:params?" element={<SEOPage />} />
+
+          {/* Sitemap Route */}
+          <Route path="/sitemap.xml" element={<SitemapPage />} />
 
           {/* Root route */}
           <Route path="/" element={<Navigate to="/home" replace />} />
