@@ -175,10 +175,10 @@ export function useLocationFormats() {
         ...location,
         status: newStatus,
         nga_format: newStatus === 'ready' && !location.nga_format 
-          ? `Nga ${location.type === 'city' ? location.city : location.state}`
+          ? `nga ${location.type === 'city' ? location.city : location.state}`
           : location.nga_format,
         per_format: newStatus === 'ready' && !location.per_format
-          ? `Për ${location.type === 'city' ? location.city : location.state}`
+          ? `per ${location.type === 'city' ? location.city : location.state}`
           : location.per_format
       };
 
