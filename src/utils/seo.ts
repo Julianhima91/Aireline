@@ -74,7 +74,7 @@ export function generateFlightSEOData(
 }
 
 export function generateSEOSitemap(routes: Array<{from: string, to: string}>): string {
-  const baseUrl = 'https://himatravel.com';
+  const baseUrl = 'https://biletaavioni.himatravel.com';
   
   const urls = routes.map(route => ({
     loc: `${baseUrl}/bileta-avioni-${route.from.toLowerCase()}-${route.to.toLowerCase()}`,
