@@ -4,10 +4,6 @@
     {
       "source": "/sitemap.xml",
       "destination": "/api/fresh-sitemap"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/api/fresh-seo"
     }
   ]
 }
