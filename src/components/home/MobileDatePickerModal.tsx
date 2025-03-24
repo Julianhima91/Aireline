@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Calendar, Plane, ArrowRight, Loader2, Edit2 } from 'lucide-react';
+import { Calendar, Plane, ArrowRight, Loader2, Edit2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, isBefore, isAfter } from 'date-fns';
 import { getCalendarPrices } from '../../lib/calendarPrices';
 import {createPortal} from 'react-dom';
@@ -292,7 +292,7 @@ export function MobileDatePickerModal({
               onClick={handleClose}
               className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <Calendar className="w-6 h-6" />
+              <X className="w-6 h-6" />
             </button>
             <div className="inline-flex rounded-lg border border-gray-200 bg-white">
               <button
@@ -380,7 +380,7 @@ export function MobileDatePickerModal({
               disabled={isBefore(startOfMonth(currentMonth), startOfMonth(new Date()))}
               className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
             >
-              <Calendar className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <div className="text-lg font-semibold">
               {format(currentMonth, 'MMMM yyyy')}
@@ -390,7 +390,7 @@ export function MobileDatePickerModal({
               disabled={isAfter(startOfMonth(currentMonth), startOfMonth(addMonths(new Date(), 11)))}
               className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
             >
-              <Calendar className="w-5 h-5" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
