@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, Calendar, ChevronLeft, ChevronRight, Loader2, Edit2 } from 'lucide-react';
+import { Calendar, Plane, ArrowRight, Loader2, Edit2 } from 'lucide-react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, isBefore, isAfter } from 'date-fns';
 import { getCalendarPrices } from '../../lib/calendarPrices';
 import {createPortal} from 'react-dom';
@@ -202,7 +202,10 @@ export function MobileDatePickerModal({
     const start = startOfMonth(currentMonth);
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
-    const emptyCells = Array(start.getDay()).fill(null);
+    
+    // Calculate empty cells for the first week
+    // Note: 0 = Monday, 6 = Sunday in our calendar
+    const emptyCells = Array(start.getDay() === 0 ? 6 : start.getDay() - 1).fill(null);
 
     return (
       <>
@@ -244,16 +247,16 @@ export function MobileDatePickerModal({
                 {loadingPrices ? (
                   <Loader2 className="w-3 h-3 animate-spin text-gray-400" />
                 ) : priceData ? (
-                  <div className='flex items-center'>
-                    <div className={`w-2 h-2 rounded-full absolute left-[4.5px] bottom-4 sm:left-4 sm:bottom-4 md:left-4 md:bottom-6 mt-0.5 ${priceData.isDirect ? 'bg-green-500' : 'bg-orange-500'
-                      }`} />
-                    <div className="flex flex-col items-center">
-                      <span className={`text-xs ${isSelected ? 'text-blue-100' :
-                        isDisabled ? 'text-gray-300' : 'text-blue-600'
-                        }`}>
-                        {priceData.price}€
-                      </span>
-                    </div>
+                  <div className="flex flex-col items-center">
+                    <span className={`text-xs ${
+                      isSelected ? 'text-blue-100' : 
+                      isDisabled ? 'text-gray-300' : 'text-blue-600'
+                    }`}>
+                      {priceData.price}€
+                    </span>
+                    <div className={`w-2 h-2 rounded-full mt-0.5 ${
+                      priceData.isDirect ? 'bg-green-500' : 'bg-orange-500'
+                    }`} />
                   </div>
                 ) : (
                   <span className="text-xs text-gray-400">--</span>
@@ -289,7 +292,7 @@ export function MobileDatePickerModal({
               onClick={handleClose}
               className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <X className="w-6 h-6" />
+              <Calendar className="w-6 h-6" />
             </button>
             <div className="inline-flex rounded-lg border border-gray-200 bg-white">
               <button
@@ -300,7 +303,7 @@ export function MobileDatePickerModal({
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Vajtje Ardhje
+                Round Trip
               </button>
               <button
                 onClick={() => handleTripTypeChange('oneWay')}
@@ -310,7 +313,7 @@ export function MobileDatePickerModal({
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Vajtje
+                One Way
               </button>
             </div>
           </div>
@@ -322,9 +325,9 @@ export function MobileDatePickerModal({
               className={`w-full flex items-center justify-between bg-gray-50 p-3 rounded-lg cursor-pointer ${!selectingReturn && 'ring-2 ring-blue-500'}`}
             >
               <div>
-                <div className="text-sm text-gray-500">Data Nisjes</div>
+                <div className="text-sm text-gray-500">Departure date</div>
                 <div className="font-medium flex items-center">
-                  {departureDate ? format(departureDate, 'dd MMM yyyy') : 'Zgjidh Daten'}
+                  {departureDate ? format(departureDate, 'dd MMM yyyy') : 'Select date'}
                   <Edit2 className="w-4 h-4 ml-2 text-blue-600" />
                 </div>
               </div>
@@ -336,7 +339,7 @@ export function MobileDatePickerModal({
                   }}
                   className="p-1 hover:bg-gray-200 rounded-full cursor-pointer"
                 >
-                  <X className="w-4 h-4" />
+                  <Calendar className="w-4 h-4" />
                 </div>
               )}
             </div>
@@ -346,9 +349,9 @@ export function MobileDatePickerModal({
                 className={`w-full flex items-center justify-between bg-gray-50 p-3 rounded-lg cursor-pointer ${selectingReturn && 'ring-2 ring-blue-500'}`}
               >
                 <div>
-                  <div className="text-sm text-gray-500">Data Kthimit</div>
+                  <div className="text-sm text-gray-500">Return date</div>
                   <div className="font-medium flex items-center">
-                    {returnDate ? format(returnDate, 'dd MMM yyyy') : 'Zgjidh Daten'}
+                    {returnDate ? format(returnDate, 'dd MMM yyyy') : 'Select date'}
                     <Edit2 className="w-4 h-4 ml-2 text-blue-600" />
                   </div>
                 </div>
@@ -361,7 +364,7 @@ export function MobileDatePickerModal({
                     }}
                     className="p-1 hover:bg-gray-200 rounded-full cursor-pointer"
                   >
-                    <X className="w-4 h-4" />
+                    <Calendar className="w-4 h-4" />
                   </div>
                 )}
               </div>
@@ -377,7 +380,7 @@ export function MobileDatePickerModal({
               disabled={isBefore(startOfMonth(currentMonth), startOfMonth(new Date()))}
               className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <Calendar className="w-5 h-5" />
             </button>
             <div className="text-lg font-semibold">
               {format(currentMonth, 'MMMM yyyy')}
@@ -387,7 +390,7 @@ export function MobileDatePickerModal({
               disabled={isAfter(startOfMonth(currentMonth), startOfMonth(addMonths(new Date(), 11)))}
               className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
             >
-              <ChevronRight className="w-5 h-5" />
+              <Calendar className="w-5 h-5" />
             </button>
           </div>
 
@@ -406,11 +409,11 @@ export function MobileDatePickerModal({
           <div className="mt-4 flex items-center justify-center gap-6 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-green-500" />
-              <span>Fluturim Direkt</span>
+              <span>Direct Flight</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-orange-500" />
-              <span>Me Ndalese</span>
+              <span>With Stops</span>
             </div>
           </div>
 
@@ -427,12 +430,12 @@ export function MobileDatePickerModal({
             <div>
               <div className="text-sm text-gray-500">
                 {tripType === 'roundTrip' && returnDate 
-                  ? 'Cmimi Total Mesatarisht' 
+                  ? 'Total price' 
                   : selectingReturn 
-                    ? 'Fluturimi Kthimit'
-                    : 'Fluturimi Nisjes'}
+                    ? 'Return flight'
+                    : 'Departure flight'}
               </div>
-              <div className="text-sm text-gray-500">Cmimi/Person</div>
+              <div className="text-sm text-gray-500">price/person</div>
             </div>
             <div className="text-xl font-bold text-blue-600">
               {loadingPrices ? (
@@ -458,4 +461,3 @@ export function MobileDatePickerModal({
     document.body
   );
 }
-
