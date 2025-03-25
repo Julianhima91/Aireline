@@ -1,109 +1,119 @@
 import React, { useState, useEffect } from 'react';
-import { Loader2, AlertCircle } from 'lucide-react';
-import { useLocationFormats } from './useLocationFormats';
-import { LocationTable } from './LocationTable';
-import { FilterBar } from './FilterBar';
-import { Pagination } from './Pagination';
-import { StatusFilter, TypeFilter } from './types';
+import { Search, Loader2, AlertCircle, Filter, ExternalLink } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
+
+interface Location {
+  id?: string;
+  type: 'city' | 'state';
+  city: string | null;
+  state: string;
+  nga_format: string | null;
+  per_format: string | null;
+  status: 'ready' | 'pending' | 'disabled';
+  template_created: boolean;
+  template_url: string | null;
+}
+
+type StatusFilter = 'all' | 'ready' | 'pending' | 'disabled';
+type TypeFilter = 'all' | 'city' | 'state';
 
 export function LocationFormats() {
-  const {
-    locations,
-    loading,
-    error,
-    saving,
-    totalCount,
-    currentPage,
-    itemsPerPage,
-    fetchLocations,
-    handlePageChange,
-    handleStatusChange,
-    handleSave
-  } = useLocationFormats();
-
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [editingCell, setEditingCell] = useState<{
-    id: string;
-    field: 'state' | 'nga_format' | 'per_format';
-  } | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [saving, setSaving] = useState<string | null>(null);
+  const [editingCell, setEditingCell] = useState<{ id: string; field: keyof Location } | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
 
-  // Fetch locations when filters or page changes
+  const ITEMS_PER_PAGE = 10;
+
   useEffect(() => {
-    fetchLocations(currentPage, typeFilter, statusFilter, searchTerm);
-  }, [fetchLocations, currentPage, typeFilter, statusFilter, searchTerm]);
+    fetchLocations();
+  }, []);
 
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const fetchLocations = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  if (loading && !locations.length) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-      </div>
-    );
-  }
+      const { data: formats, error: formatsError } = await supabase
+        .from('seo_location_formats')
+        .select('*');
 
-  if (error) {
-    return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center text-red-700">
-        <AlertCircle className="w-5 h-5 mr-2" />
-        {error}
-      </div>
-    );
-  }
+      if (formatsError) throw formatsError;
+      setLocations(formats || []);
+    } catch (err) {
+      setError('Failed to load locations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusToggle = async (location: Location, newStatus: Location['status']) => {
+    setSaving(location.id || null);
+    try {
+      const { error } = await supabase
+        .from('seo_location_formats')
+        .update({ status: newStatus })
+        .eq('id', location.id);
+
+      if (error) throw error;
+
+      setLocations(prev =>
+        prev.map(loc =>
+          loc.id === location.id ? { ...loc, status: newStatus } : loc
+        )
+      );
+    } catch (err) {
+      console.error('Failed to update status', err);
+    } finally {
+      setSaving(null);
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Filters */}
-      <FilterBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        typeFilter={typeFilter}
-        onTypeFilterChange={setTypeFilter}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
-      />
-
-      {/* Locations Table */}
-      <LocationTable
-        locations={locations}
-        editingCell={editingCell}
-        editValue={editValue}
-        saving={saving}
-        onCellClick={(location, field) => {
-          setEditingCell({ 
-            id: location.id || 
-              (location.type === 'city' 
-                ? `city-${location.city}-${location.state}`
-                : `state-${location.state}`),
-            field 
-          });
-          setEditValue(location[field] || '');
-        }}
-        onCellBlur={(location) => {
-          if (editingCell) {
-            handleSave({
-              ...location,
-              [editingCell.field]: editValue || null
-            });
-            setEditingCell(null);
-          }
-        }}
-        onEditValueChange={setEditValue}
-        onStatusChange={handleStatusChange}
-      />
-
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        totalItems={totalCount}
-        itemsPerPage={itemsPerPage}
-        onPageChange={handlePageChange}
-        loading={loading}
-      />
+    <div className="p-6">
+      <h2 className="text-xl font-semibold mb-4">Location Formats</h2>
+      {loading ? (
+        <div className="flex justify-center"><Loader2 className="animate-spin" /></div>
+      ) : error ? (
+        <div className="text-red-500 flex items-center"><AlertCircle className="mr-2" /> {error}</div>
+      ) : (
+        <table className="w-full text-left">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>City</th>
+              <th>Status</th>
+              <th>Template URL</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {locations.map(loc => (
+              <tr key={loc.id} className="border-t">
+                <td>{loc.state}</td>
+                <td>{loc.city}</td>
+                <td>{loc.status}</td>
+                <td>{loc.template_url ? <a href={loc.template_url} target="_blank" rel="noreferrer"><ExternalLink size={16} /></a> : '—'}</td>
+                <td>
+                  <button
+                    className="text-sm text-blue-600 underline"
+                    disabled={saving === loc.id}
+                    onClick={() => handleStatusToggle(loc, loc.status === 'ready' ? 'pending' : 'ready')}
+                  >
+                    {loc.status === 'ready' ? 'Mark Pending' : 'Mark Ready'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
