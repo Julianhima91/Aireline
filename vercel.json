@@ -2,12 +2,19 @@
   "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "/api/fresh-sitemap"
+      "destination": "/api/sitemap-index"
+    },
+    {
+      "source": "/sitemaps/page-:page.xml",
+      "destination": "/api/sitemap-page"
     }
   ],
   "functions": {
-    "api/fresh-sitemap.js": {
-      "maxDuration": 300
+    "api/sitemap-index.js": {
+      "maxDuration": 10
+    },
+    "api/sitemap-page.js": {
+      "maxDuration": 60
     }
   }
 }
