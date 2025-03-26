@@ -7,28 +7,35 @@ const supabase = createClient(
 
 export default async function handler(req, res) {
   const page = parseInt(req.query.page || '1', 10);
-  const pageSize = 10000;
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const urlsPerPage = 10000;
+  const batchSize = 1000; // Supabase's max per query
+  const totalBatches = urlsPerPage / batchSize;
+  const allRoutes = [];
 
-  const { data: routes, error } = await supabase
-    .from('seo_location_connections')
-    .select('template_url', { count: 'exact' })
-    .eq('status', 'active')
-    .not('template_url', 'is', null)
-    .order('template_url', { ascending: true })
-    .range(from, to);
+  for (let i = 0; i < totalBatches; i++) {
+    const from = ((page - 1) * urlsPerPage) + (i * batchSize);
+    const to = from + batchSize - 1;
 
-  if (error) {
-    console.error('Supabase error:', error);
-    return res.status(500).send('Error fetching data');
+    const { data: batch, error } = await supabase
+      .from('seo_location_connections')
+      .select('template_url')
+      .eq('status', 'active')
+      .not('template_url', 'is', null)
+      .order('template_url', { ascending: true })
+      .range(from, to);
+
+    if (error) {
+      console.error(`Error fetching batch ${i + 1}:`, error);
+      return res.status(500).send('Error fetching sitemap data');
+    }
+
+    allRoutes.push(...batch);
   }
 
   const baseUrl = 'https://biletaavioni.himatravel.com';
-
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${routes.map(route => `
+  ${allRoutes.map(route => `
   <url>
     <loc>${baseUrl}${route.template_url}</loc>
     <changefreq>daily</changefreq>
