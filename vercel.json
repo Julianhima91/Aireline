@@ -4,7 +4,7 @@
     {
       "source": "/sitemap.xml",
       "destination": "/api/fresh-sitemap"
-      "maxDuration": 300
+      "maxDuration": "300"
     }
   ]
 }
