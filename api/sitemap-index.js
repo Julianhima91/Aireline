@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const totalPages = 7; // Approximate, you can increase if needed
+  const totalPages = 8; // Approximate, you can increase if needed
   const baseUrl = 'https://biletaavioni.himatravel.com';
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
