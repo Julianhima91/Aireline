@@ -1,10 +1,13 @@
 {
-  "version": 2,
   "rewrites": [
     {
       "source": "/sitemap.xml",
       "destination": "/api/fresh-sitemap"
-      "maxDuration": "300"
     }
-  ]
+  ],
+  "functions": {
+    "api/fresh-sitemap.js": {
+      "maxDuration": 300
+    }
+  }
 }
