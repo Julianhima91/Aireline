@@ -11,4 +11,5 @@ Allow: /privacy
 Allow: /terms
 
 # Sitemaps
+Allow: /sitemaps/
 Sitemap: https://biletaavioni.himatravel.com/sitemap.xml
