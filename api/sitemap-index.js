@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const totalPages = 8; // Number of pages you need (each contains 10,000 links)
+  const totalPages = 80; // Now we're using 80 pages of 1000 URLs each
   const baseUrl = 'https://biletaavioni.himatravel.com';
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
